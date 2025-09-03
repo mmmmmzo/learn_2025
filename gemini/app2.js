@@ -1,5 +1,4 @@
-// geminiの出力
-// test2
+// geminiがレビューしてくれたやつ
 const CLASS_SELECT = 'isSelect',
     CLASS_HIDDEN = 'hidden',
     CLASS_OVER_WRITE = 'overWriteTxt',
