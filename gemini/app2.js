@@ -1,4 +1,5 @@
 // geminiがレビューしてくれたやつ
+// ブランチテスト
 const CLASS_SELECT = 'isSelect',
     CLASS_HIDDEN = 'hidden',
     CLASS_OVER_WRITE = 'overWriteTxt',
