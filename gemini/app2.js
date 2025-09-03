@@ -1,5 +1,5 @@
 // geminiの出力
-// test
+// test2
 const CLASS_SELECT = 'isSelect',
     CLASS_HIDDEN = 'hidden',
     CLASS_OVER_WRITE = 'overWriteTxt',
