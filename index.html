@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="UTF-8">
+  <title>sample</title>
+  <link rel="stylesheet" href="style.css">
+  </link>
+  <script src="app.js" charset="utf-8"></script>
+</head>
+
+<body>
+
+  <div class="modalArea">
+    <p></p>★モーダルエリア</p>
+    <div class="loadingMsg">
+      <p>ローディング中</p>
+    </div>
+    <div class="confirmMsg hidden">
+      <p>テキスト上書きしていいですか？</p>
+      <button type="button" class="cancelBtn">Cancel</button>
+      <button type="button" class="registBtn">OK</button>
+    </div>
+  </div>
+  <h2>textBox</h2>
+  <div class="textBoxArea">
+    <textarea id="textBox" name="textBox" rows="2" cols="60" disabled>sample</textarea>
+    <p><span class="textLength"></span>/52</p>
+  </div>
+  <div class="overWriteTxtArea">
+    <dl class="overWriteTxtList"></dl>
+  </div>
+  <h2>type</h2>
+  <div class="selectArea">
+    <select id="typeSelect" name="typeSelect">
+      <option disabled selected>選択してください</option>
+    </select>
+  </div>
+
+</body>
+
+</html>

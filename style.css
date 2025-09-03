@@ -1,0 +1,66 @@
+p {
+  margin: 0;
+}
+
+h2 {
+  font-size: 12px;
+}
+
+button {
+  cursor: pointer;
+}
+
+.hidden {
+  /* display: none; */
+  opacity: 0.5;
+}
+
+.modalArea {
+  text-align: center;
+}
+
+.loadingMsg {
+  outline: 1px solid red;
+}
+
+.confirmMsg {
+  outline: 1px solid red;
+}
+
+.overWriteTxtBlock>div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+}
+
+.overWriteTxtBlock dd {
+  margin: 0;
+}
+
+.textBoxArea {
+  display: flex;
+  align-items: end;
+  padding: 5px;
+}
+
+.textBoxArea>p {
+  font-size: 12px;
+  margin: 0 5px;
+}
+
+.textBoxArea.err {
+  background-color: red;
+}
+
+#textBox:focus,
+.overWriteTxtBlock.isSelect,
+.rateBtn.isSelect {
+  background-color: #cae6f7;
+}
+
+.overWriteTxtBlock.isSelect .overWriteBtn {
+  pointer-events: none;
+  opacity: .5;
+}
