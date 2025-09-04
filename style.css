@@ -11,7 +11,7 @@ button {
 }
 
 .hidden {
-  /* display: none; */
+  display: none;
   opacity: 0.5;
 }
 
@@ -20,11 +20,19 @@ button {
 }
 
 .loadingMsg {
-  outline: 1px solid red;
+  background: red;
+  color: #fff;
 }
 
 .confirmMsg {
+  background-color: rgb(197, 221, 253);
+  padding: 5px;
+}
+
+.hidden .confirmMsg {
   outline: 1px solid red;
+  background-color: inherit;
+
 }
 
 .overWriteTxtBlock>div {
