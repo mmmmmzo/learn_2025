@@ -4,7 +4,7 @@ const CLASS_SELECT = 'isSelect',
   CLASS_OVER_WRITE = 'overWriteTxt',
   CLASS_BLOCK_OVER_WRITE = 'overWriteTxtBlock',
   BUTTON_OVER_WRITE = 'overWriteBtn',
-  BUTTON_RATE = 'rate',
+  BUTTON_RATE = 'rateBtn',
   BUTTON_RATE_GOOD = 'good',
   BUTTON_RATE_BAD = 'bad',
   MAX_LENGTH = 52;
@@ -104,6 +104,7 @@ class App {
         this.openModal();
       });
     });
+
     this.rateBtns.forEach(btn => btn.addEventListener('click', () => this.checkRateBtn(btn)));
   };
   changeTypeSelect(event) {
@@ -158,12 +159,12 @@ class App {
   checkRateBtn(btn) {
     // goodかbadボタン選択
     const clickRate = btn.dataset.rate;
+
+    btn.classList.toggle(CLASS_SELECT);
+
     if (clickRate === BUTTON_RATE_GOOD) {
-      btn.classList.toggle(CLASS_SELECT);
       btn.nextElementSibling.classList.remove(CLASS_SELECT); // bad
-    }
-    if (clickRate === BUTTON_RATE_BAD) {
-      btn.classList.toggle(CLASS_SELECT);
+    } else {
       btn.previousElementSibling.classList.remove(CLASS_SELECT); // good
     }
   };
