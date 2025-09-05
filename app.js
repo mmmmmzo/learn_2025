@@ -54,7 +54,6 @@ class App {
   createOverWriteTxtArea(list) {
     this.overWriteTxtList.innerHTML = '';
 
-    console.log('list：', list)
     // テキストボックスと評価ボタン
     const html = list.map(item =>
       `<div class="${CLASS_BLOCK_OVER_WRITE}">
@@ -78,6 +77,7 @@ class App {
     this.loadingCompleted();
   };
   createTypeSelectOption() {
+    // ★Geminiに教えてもらう…。
     // タイプの種類を抽出
     const allTypes = Object.values(this.jsonList).map(list => list.type);
     const typeList = [...new Set(allTypes)]; // 重複はカウントせず
@@ -88,10 +88,10 @@ class App {
   bindEvent() {
     this.textBox.addEventListener('keyup', () => this.countTxtLength());
     this.typeSelect.addEventListener('change', this.changeTypeSelect.bind(this)); // メモ：bindの書き方例
-    // this.typeSelect.addEventListener('change', (event) => this.changeTypeSelect(event)); // アロー関数ならこっち
+    // this.typeSelect.addEventListener('change', (event) => this.changeTypeSelect(event)); // アロー関数でもいい
 
     this.registBtn.addEventListener('click', this.outputTxt.bind(this));
-    // this.registBtn.addEventListener('click', () => this.outputTxt()); // アロー関数ならこっち
+    // this.registBtn.addEventListener('click', () => this.outputTxt()); // アロー関数でもいい
 
     this.cancelBtn.addEventListener('click', this.closeModal.bind(this));
   };
@@ -138,10 +138,10 @@ class App {
   };
   colorSelectedBlock(target) {
     // 選択元に色を付ける
-    this.overWriteTxtBlocks.forEach(item => {
-      item.querySelector(`.${CLASS_BLOCK_OVER_WRITE}.${CLASS_SELECT}`);
-      if (item) item.classList.remove(CLASS_SELECT);
-    })
+    const hasClass = document.querySelector(`.${CLASS_BLOCK_OVER_WRITE}.${CLASS_SELECT}`);
+    if (hasClass) {
+      hasClass.classList.remove(CLASS_SELECT);
+    }
 
     target.classList.add(CLASS_SELECT);
   };
@@ -179,7 +179,7 @@ class App {
     // ローディングの解除
     setTimeout(() => {
       this.textBox.disabled = false;
-      this.closeModal();
+      this.closeModal(); // ローディングはモーダルの中にあるためclose処理をする
       document.querySelector('.loadingMsg').classList.add(CLASS_HIDDEN);
     }, 1000);
   }
