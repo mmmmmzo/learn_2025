@@ -36,13 +36,13 @@ class App {
       .then(json => {
         this.jsonList = json.waza_list.LegendsArceus;
 
-        this.handleRegistration(this.jsonList);
+        this.renderInitialContent(this.jsonList);
         this.createTypeSelectOption();
         this.bindEvent();
       })
       .catch(error => console.error('Error:', error));
   };
-  handleRegistration(list) {
+  renderInitialContent(list) {
     // 上から3件抽出を抽出
     const txtList = Object.keys(list).slice(0, 3).map(key => ({
       title: key,
@@ -82,10 +82,8 @@ class App {
     const allTypes = Object.values(this.jsonList).map(list => list.type);
     const typeList = [...new Set(allTypes)]; // 重複はカウントせず
 
-    typeList.forEach(item => {
-      const html = `<option value="${item}">${item}</option>`;
-      document.querySelector('#typeSelect').insertAdjacentHTML('beforeend', html);
-    })
+    const options = typeList.map(item => `<option value="${item}">${item}</option>`).join('');
+    this.typeSelect.insertAdjacentHTML('beforeend', options);
   };
   bindEvent() {
     this.textBox.addEventListener('keyup', () => this.countTxtLength());
@@ -123,23 +121,28 @@ class App {
       // Object.fromEntriesを使ってキーと値のペアから新しいオブジェクトを生成
       filterList = Object.fromEntries(filteredEntries);
     }
-    this.handleRegistration(filterList);
+    this.renderInitialContent(filterList);
   };
   outputTxt() {
     // テキストをboxに上書きする
-    const target = this.overWriteTxtBlocks[this.selectIndex];
-    if (target) {
-      this.textBox.value = target.querySelector(`.${CLASS_OVER_WRITE}`).textContent;
+    const targetBlock = this.overWriteTxtBlocks[this.selectIndex];
+    if (targetBlock) {
+      // .overWriteTxtというクラスを持つdt要素を直接探す
+      const overWriteTxt = targetBlock.querySelector(`.${CLASS_OVER_WRITE}`).textContent;
+      this.textBox.value = overWriteTxt;
       this.countTxtLength();
-      this.colorSelectedBlock(target);
+      this.colorSelectedBlock(targetBlock);
     }
 
     this.closeModal();
   };
   colorSelectedBlock(target) {
     // 選択元に色を付ける
-    const hasClass = document.querySelector(`.${CLASS_BLOCK_OVER_WRITE}.${CLASS_SELECT}`);
-    if (hasClass) hasClass.classList.remove(CLASS_SELECT);
+    this.overWriteTxtBlocks.forEach(item => {
+      item.querySelector(`.${CLASS_BLOCK_OVER_WRITE}.${CLASS_SELECT}`);
+      if (item) item.classList.remove(CLASS_SELECT);
+    })
+
     target.classList.add(CLASS_SELECT);
   };
   countTxtLength() {
