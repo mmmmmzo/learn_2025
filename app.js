@@ -4,6 +4,7 @@ const CLASS_SELECT = 'isSelect',
   CLASS_OVER_WRITE = 'overWriteTxt',
   CLASS_BLOCK_OVER_WRITE = 'overWriteTxtBlock',
   BUTTON_OVER_WRITE = 'overWriteBtn',
+  BUTTON_RATE = 'rate',
   BUTTON_RATE_GOOD = 'good',
   BUTTON_RATE_BAD = 'bad',
   MAX_LENGTH = 52;
@@ -25,10 +26,9 @@ class App {
     this.modalArea = document.querySelector('.modalArea');
     this.confirmMsg = document.querySelector('.confirmMsg');
     this.overWriteTxtList = document.querySelector('.overWriteTxtList');
-    this.overWriteBtns = [];
     this.overWriteTxtBlocks = [];
+    this.overWriteBtns = [];
     this.rateBtns = [];
-    this.overWriteTxt = [];
   };
   fetchAPI() {
     fetch('./waza_list.json')
@@ -53,53 +53,29 @@ class App {
   };
   createOverWriteTxtArea(list) {
     this.overWriteTxtList.innerHTML = '';
-    this.overWriteTxt = [];
 
     console.log('list：', list)
     // テキストボックスと評価ボタン
     const html = list.map(item =>
       `<div class="${CLASS_BLOCK_OVER_WRITE}">
-        <dt class="${CLASS_OVER_WRITE}">[${item.type}]【${item.title}】${item.text}</dt>
+        <dt class="${CLASS_OVER_WRITE}">[${item.type}]${item.title}：${item.text}</dt>
         <dd>
         <button type="button" class="${BUTTON_OVER_WRITE}">上書き</button>
         </dd>
         <dd class="rateBtnArea">
-        <button type="button" class="rateBtn" data-rate="${BUTTON_RATE_GOOD}">GOOD</button>
-        <button type="button" class="rateBtn" data-rate="${BUTTON_RATE_BAD}">BAD</button>
+        <button type="button" class="${BUTTON_RATE}" data-rate="${BUTTON_RATE_GOOD}">GOOD</button>
+        <button type="button" class="${BUTTON_RATE}" data-rate="${BUTTON_RATE_BAD}">BAD</button>
         </dd>
         </div>`
     ).join('');
     this.overWriteTxtList.insertAdjacentHTML('beforeend', html);
+    // ここで作った作られた情報取得
     this.overWriteTxtBlocks = Array.from(document.getElementsByClassName(CLASS_BLOCK_OVER_WRITE));
-    console.log(this.overWriteTxtBlocks)
     this.overWriteBtns = Array.from(document.getElementsByClassName(BUTTON_OVER_WRITE));
-    this.rateBtns = Array.from(document.getElementsByClassName('rateBtn'));
+    this.rateBtns = Array.from(document.getElementsByClassName(BUTTON_RATE));
     this.bindOverWriteButtons();
-    this.overWriteTxt = Array.from(document.getElementsByClassName(CLASS_OVER_WRITE));
     this.countTxtLength();
-    // this.onclickBtnEvent();
     this.loadingCompleted();
-  };
-  bindOverWriteButtons() {
-    this.overWriteBtns.forEach((btn, i) => {
-      btn.addEventListener('click', () => {
-        // クリックされたボタンのインデックスを保存し、モーダルを開く
-        console.log('bindOverWriteButtons', i)
-
-        this.selectIndex = i;
-        this.openModal();
-      });
-    });
-    this.rateBtns.forEach(item => item.addEventListener('click', () => this.checkRateBtn(item)));
-  };
-  loadingCompleted() {
-    // 形だけ作ったものなので数秒で消える
-    // ローディングの解除
-    setTimeout(() => {
-      this.textBox.disabled = false;
-      this.closeModal();
-      document.querySelector('.loadingMsg').classList.add(CLASS_HIDDEN);
-    }, 1000);
   };
   createTypeSelectOption() {
     // タイプの種類を抽出
@@ -116,50 +92,55 @@ class App {
     this.typeSelect.addEventListener('change', this.changeTypeSelect.bind(this)); // メモ：bindの書き方例
     // this.typeSelect.addEventListener('change', (event) => this.changeTypeSelect(event)); // アロー関数ならこっち
 
-    this.registBtn.addEventListener('click', this.overWriteTxt1.bind(this));
-    // this.registBtn.addEventListener('click', () => console.log(this.overWriteTxt1()));
+    this.registBtn.addEventListener('click', this.outputTxt.bind(this));
+    // this.registBtn.addEventListener('click', () => this.outputTxt()); // アロー関数ならこっち
+
     this.cancelBtn.addEventListener('click', this.closeModal.bind(this));
   };
-  // onclickBtnEvent() {
-  //   this.overWriteBtns.forEach((btn, i) => btn.addEventListener('click', () => this.confirmOverWrite(i)));
-  //   this.rateBtns.forEach(btn => btn.addEventListener('click', () => this.checkRateBtn(btn)));
-
-  // };
+  bindOverWriteButtons() {
+    // 上書きボタン押下処理
+    this.overWriteBtns.forEach((btn, i) => {
+      btn.addEventListener('click', () => {
+        // クリックされたボタンのインデックスを保存し、モーダルを開く
+        this.selectIndex = i;
+        this.openModal();
+      });
+    });
+    this.rateBtns.forEach(btn => btn.addEventListener('click', () => this.checkRateBtn(btn)));
+  };
   changeTypeSelect(event) {
+    // ★Geminiに教えてもらう…。
     // タイプの変更
     const type = event.currentTarget.value;
+    let filterList = {};
 
-    // Object.entriesを使ってキーと値のペアの配列を取得
-    const filteredEntries = Object.entries(this.jsonList).filter(([key, value]) => value.type === type);
+    if (type === 'ALL') {
+      filterList = this.jsonList;
+    } else {
+      // Object.entriesを使ってキーと値のペアの配列を取得
+      const filteredEntries = Object.entries(this.jsonList).filter(([key, value]) => value.type === type);
 
-    // Object.fromEntriesを使ってキーと値のペアから新しいオブジェクトを生成
-    const filterList = Object.fromEntries(filteredEntries);
-
+      // Object.fromEntriesを使ってキーと値のペアから新しいオブジェクトを生成
+      filterList = Object.fromEntries(filteredEntries);
+    }
     this.handleRegistration(filterList);
   };
-  confirmOverWrite(i) {
-    console.log('上書き押下', i)
-    // this.selectIndex = i;
-    this.openModal();
-    this.confirmMsg.classList.remove(CLASS_HIDDEN);
-  };
-  overWriteTxt1(e) {
-    console.log('OK押下', e)
-    // registBtnが押されたときに、保存しておいたインデックスを使用する
-    const targetElement = this.overWriteTxtBlocks[this.selectIndex];
-    if (targetElement) {
-      const overWriteTxt = targetElement.querySelector(`.${CLASS_OVER_WRITE}`).textContent;
-      this.textBox.value = overWriteTxt;
+  outputTxt() {
+    // テキストをboxに上書きする
+    const target = this.overWriteTxtBlocks[this.selectIndex];
+    if (target) {
+      this.textBox.value = target.querySelector(`.${CLASS_OVER_WRITE}`).textContent;
       this.countTxtLength();
-      this.colorSelectedBlock(targetElement);
+      this.colorSelectedBlock(target);
     }
 
     this.closeModal();
   };
-  colorSelectedBlock(element) {
+  colorSelectedBlock(target) {
+    // 選択元に色を付ける
     const hasClass = document.querySelector(`.${CLASS_BLOCK_OVER_WRITE}.${CLASS_SELECT}`);
     if (hasClass) hasClass.classList.remove(CLASS_SELECT);
-    element.classList.add(CLASS_SELECT);
+    target.classList.add(CLASS_SELECT);
   };
   countTxtLength() {
     let len = 0;
@@ -183,15 +164,21 @@ class App {
       btn.previousElementSibling.classList.remove(CLASS_SELECT); // good
     }
   };
-  closeModal(btn) {
-    if (btn) console.log('closeModal', btn)
-
+  closeModal() {
     this.modalArea.classList.add(CLASS_HIDDEN);
   };
   openModal() {
-    // if (btn) console.log('openModal', btn)
     this.confirmMsg.classList.remove(CLASS_HIDDEN);
     this.modalArea.classList.remove(CLASS_HIDDEN);
+  };
+  loadingCompleted() {
+    // 形だけ作ったものなので数秒で消える
+    // ローディングの解除
+    setTimeout(() => {
+      this.textBox.disabled = false;
+      this.closeModal();
+      document.querySelector('.loadingMsg').classList.add(CLASS_HIDDEN);
+    }, 1000);
   }
 }
 

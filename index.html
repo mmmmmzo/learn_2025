@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
   <div class="modalArea">
     <div class="loadingMsg">
       <p>ローディング中</p>
@@ -21,22 +20,28 @@
       <button type="button" class="registBtn">OK</button>
     </div>
   </div>
-
-  <h2>type</h2>
-  <div class="selectArea">
-    <select id="typeSelect" name="typeSelect">
-      <option disabled selected>選択してください</option>
-    </select>
+  <div class="wrapper">
+    <h2>タイプで絞り込む</h2>
+    <div class="selectArea">
+      <select id="typeSelect" name="typeSelect">
+        <option disabled selected>選択してください</option>
+        <option value="ALL">ALL</option>
+      </select>
+    </div>
+    <h2>選択するとtextBoxに表示されるだけ</h2>
+    <ul>
+      <li>上書きボタン：テキストボックスにテキストを上書きするだけ</li>
+      <li>GOOD/BADボタン：どちらかを押せるだけです。リロードしたら消えます。</li>
+    </ul>
+    <div class="textBoxArea">
+      <textarea id="textBox" name="textBox" rows="2" cols="60">sample</textarea>
+      <p><span class="textLength"></span>/52</p>
+    </div>
+    <h2>データ一覧</h2>
+    <div class="overWriteTxtArea">
+      <dl class="overWriteTxtList"></dl>
+    </div>
   </div>
-  <h2>textBox</h2>
-  <div class="textBoxArea">
-    <textarea id="textBox" name="textBox" rows="2" cols="60">sample</textarea>
-    <p><span class="textLength"></span>/52</p>
-  </div>
-  <div class="overWriteTxtArea">
-    <dl class="overWriteTxtList"></dl>
-  </div>
-
 
 </body>
 
